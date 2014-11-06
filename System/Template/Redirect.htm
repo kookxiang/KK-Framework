@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>系统消息</title>
+	<meta name="Robots" content="NOINDEX, NOFOLLOW, NOARCHIVE"/>
+	<base href="{SITE_URL}"/>
+	<meta name="ViewPort" content="initial-scale=1, minimum-scale=1, width=device-width"/>
+	<style>
+		html, body { width: 100%; height: 100%; }
+		html, body, p, h2, div { margin: 0; padding: 0; }
+		body { background: #f2f2f2; }
+		html { font: 12px "Microsoft YaHei", Arial, helvetica, sans-serif; }
+		.box { position: relative; top: 75px; width: 480px; max-width: 90%; margin: 0 auto; background: #fff; padding: 15px; border: 1px solid #e5e5e5; }
+		.foot { text-align: center; margin: 85px 15px 0; color: #bcbcbc; font-size: 10px; }
+		p { line-height: 1.5em; margin: 0 5px .7em; color: #000; }
+		h2 { margin-bottom: 20px; font-size: 24px; }
+		.tips { margin: 1em 5px 0; text-align: center; }
+		.tips a { font-size: 12px; text-decoration: none; color: #bbb; }
+		.title { margin: 0 10px 30px; font-size: 14px; }
+		@media (max-width: 550px){
+			.box { top: 15px; width: 90%; border: none; }
+			body { background: #fff; }
+		}
+	</style>
+</head>
+<body>
+<div class="box">
+	<h2>系统消息</h2>
+
+	<p class="title"><?php echo $text; ?></p>
+	<?php if($link !== null){ ?>
+	<p class="tips"><a href="{$link}">如果您的浏览器没有自动跳转，请点击这里</a></p>
+	<script type="text/javascript">
+		setTimeout(function(){ location.href = '{$link}'; }, $timeout * 1000);
+	</script>
+	<?php } ?>
+</div>
+<p class="foot">Powered by KK Framework</p>
+</body>
+</html>
