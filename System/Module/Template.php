@@ -112,8 +112,6 @@ class Template {
 		$variable = self::preg_get($match[1], '/variable="([^"]+)"/i');
 		if(!$variable)
 			$variable = self::preg_get($match[1], '/^\s*"([^"]+)"/i');
-		if(!$variable){
-		}
 		if(!$variable)
 			throw new Exception('Cannot convert loop label: '.htmlspecialchars($match[0]), 102);
 		$query = self::preg_get($match[1], '/query="([^"]+)"/i');
