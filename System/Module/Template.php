@@ -56,7 +56,7 @@ class Template {
 		$lock->acquire();
 
 		// PHP code:
-		$sourceCode = preg_replace('/<script>(.+?)<\/script>/is', '<?php \\1; ?>', $sourceCode);
+		$sourceCode = preg_replace('/<php>(.+?)<\/php>/is', '<?php \\1; ?>', $sourceCode);
 		$lock->acquire();
 
 		// import:
