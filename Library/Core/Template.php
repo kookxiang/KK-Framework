@@ -9,6 +9,8 @@ namespace Core;
 use Helper\PHPLock;
 
 class Template {
+	private static $watchList = array();
+
 	/**
 	 * Load a template from data folder, compile it if it is outdated or not exists
 	 * @param $templateName
@@ -101,6 +103,13 @@ class Template {
 		// clear space and tab
 		$sourceCode = preg_replace('/^[ \t]*(.+)[ \t]*$/m', '\\1', $sourceCode);
 
+		// Compress CSS
+		$sourceCode = preg_replace_callback('/<link (.+?)>[\r\n]*/is', array('\\Core\\Template', 'compressCss'), $sourceCode);
+		if(self::$cssFiles){
+			$targetFile = Resource::CompressCSS(self::$cssFiles, $templateName);
+			$sourceCode = str_replace('</head>', '<link rel="stylesheet" href="'.$targetFile.'" />'.PHP_EOL.'</head>', $sourceCode);
+		}
+
 		$output = '<?php'.PHP_EOL;
 		$output .= 'if(!defined(\'FORUM_PATH\'))';
 		$output .= ' exit(\'This file could not be access directly.\');'.PHP_EOL;
@@ -140,6 +149,36 @@ class Template {
 		if(strpos($linkTarget, '//') !== false) return $originText;
 		if(file_exists(FORUM_PATH.$linkTarget)) return $originText;
 		return str_replace($linkTarget, 'index.php/'.$linkTarget, $originText);
+	}
+
+	private static $cssFiles = array();
+	public static function compressCss($match){
+		if (!defined('OPTIMIZE_RES') || !OPTIMIZE_RES) return '';
+		$linkElement = $match[0];
+		if(strpos($linkElement, '//') !== false) return $linkElement;
+		if(strpos($linkElement, '.min.') !== false) return $linkElement;
+		if(!preg_match('/rel=.?stylesheet.?/i', $linkElement)) return $linkElement;
+		$target = self::preg_get($linkElement, '/href=[\'"](.+)[\'"]/i');
+		if(!$target) return $linkElement;
+		if(!file_exists(FORUM_PATH.$target)) return $linkElement;
+		self::$cssFiles[] = $target;
+		self::$watchList[] = $target;
+		return '';
+	}
+
+	/**
+	 * Check if template need update by monitoring a file
+	 * @param $filePath
+	 * @param $timestamp
+	 * @param $template
+	 */
+	public static function checkFileUpdate($filePath, $timestamp, $template){
+		if (strpos($filePath, FORUM_PATH) !== false){
+			$filePath = FORUM_PATH.$filePath;
+		}
+		$modifyTime = filemtime($filePath);
+		if ($modifyTime < $timestamp) return;
+		self::compile($template);
 	}
 
 	private static function preg_get($subject, $pattern, $offset = 1){
