@@ -17,13 +17,16 @@ class Template {
 	 */
 	public static function load($templateName){
 		$templateFileOrigin = self::getPath($templateName);
-		if(!file_exists($templateFileOrigin))
-			throw new Error("Template {$templateName} not exists!", 101);
 		$templateFile = DATA_PATH."Template/{$templateName}.php";
-		if(file_exists($templateFile))
-			if(filemtime($templateFile) > filemtime($templateFileOrigin))
-				return $templateFile;
-		self::compile($templateName);
+		if(!file_exists($templateFile) && !file_exists($templateFileOrigin))
+			throw new Error("Template {$templateName} not exists!", 101);
+		if(defined(TEMPLATE_UPDATE) && !TEMPLATE_UPDATE){
+			// Do not check template update
+		}elseif(!file_exists($templateFile)){
+			self::compile($templateName);
+		}elseif(filemtime($templateFile) <= filemtime($templateFileOrigin)){
+			self::compile($templateName);
+		}
 		return $templateFile;
 	}
 

@@ -41,6 +41,12 @@ define('HTTPS_SUPPORT', false);
 define('DEBUG_ENABLE', true);
 
 /**
+ * Check template and resource file update automatically
+ * You can turn off this on production environment.
+ */
+define('TEMPLATE_UPDATE', true);
+
+/**
  * Base URL:
  * To manually config this, uncomment the following line and change the URL
  * To use auto detect, keep this commented
