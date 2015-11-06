@@ -12,6 +12,7 @@ Package/
 
 # Phinx Database config file
 phinx.yml
+phinx.php
 
 # Deploy script
 deploy.sh
