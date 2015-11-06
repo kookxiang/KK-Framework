@@ -6,14 +6,14 @@
  */
 
 // Initialize constants
-define('FORUM_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
-define('LIBRARY_PATH', FORUM_PATH.'Library/');
-define('DATA_PATH', FORUM_PATH.'Data/');
-@ini_set('display_errors', 'Off');
+define('ROOT_PATH', dirname(__FILE__).DIRECTORY_SEPARATOR);
+define('LIBRARY_PATH', ROOT_PATH.'Library/');
+define('DATA_PATH', ROOT_PATH.'Data/');
+@ini_set('display_errors', 'on');
 @ini_set('expose_php', false);
 
 // Register autoloader
-require LIBRARY_PATH.'Core/AutoLoader.php';
+require ROOT_PATH.'Package/autoload.php';
 
 // Register error handler
 Core\Error::registerHandler();
@@ -21,14 +21,5 @@ Core\Error::registerHandler();
 // Initialize config
 @include DATA_PATH.'Config.php';
 
-$requestPath = Core\Request::getRequestPath();
-$requestPath = strtolower($requestPath);
-list(, $controller, $action) = explode('/', $requestPath, 3);
-
-switch(true){
-	case $controller == 'test':
-		echo 'Hello world~';
-		break;
-	default:
-		throw new Core\Error('The request URL is not exists', 404);
-}
+$defaultRouter = new \Core\DefaultRouter();
+$defaultRouter->handleRequest();
