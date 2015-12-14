@@ -25,13 +25,15 @@ class DefaultRouter
         }
     }
 
-    private function findController($requestPath, $subDir = '')
-    {
+    private function findController($requestPath, $subDir = '') {
         list($controller, $method) = explode('/', $requestPath, 2);
 
         $controller = ucfirst($controller);
 
         if (is_dir(LIBRARY_PATH . "Controller/{$subDir}{$controller}")) {
+            if (!$method) {
+                $method = 'Index';
+            }
             $this->findController($method, $subDir . $controller . '/');
         } elseif (file_exists(LIBRARY_PATH . "Controller/{$subDir}{$controller}.php")) {
             if (!$method) {
@@ -40,6 +42,7 @@ class DefaultRouter
                 $method = lcfirst($method);
             }
             $classname = str_replace('/', '\\', "Controller/{$subDir}{$controller}");
+
             $controller = new $classname();
 
             if (method_exists($controller, $method)) {
