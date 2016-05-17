@@ -38,7 +38,7 @@ final class Filter
         }
     }
     public static function afterRoute(&$className, &$method){
-        foreach (self::$registeredFilter as $filter) {
+        foreach (array_reverse(self::$registeredFilter) as $filter) {
             $filter->afterRoute($className, $method);
         }
     }
@@ -48,7 +48,7 @@ final class Filter
         }
     }
     public static function afterRender(){
-        foreach (self::$registeredFilter as $filter) {
+        foreach (array_reverse(self::$registeredFilter) as $filter) {
             $filter->afterRender();
         }
     }
