@@ -4,4 +4,6 @@
  */
 "use strict";
 
+require('../Misc/Error.css');
+
 console.log("Hello world from KK-Framework.");
