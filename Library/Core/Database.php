@@ -70,7 +70,7 @@ class Database extends \PDO
             $name = substr($name, 1);
         }
         if (method_exists(self::$instance, $name)) {
-            call_user_func_array(array(self::$instance, $name), $arguments);
+            return call_user_func_array(array(self::$instance, $name), $arguments);
         }
     }
 }
